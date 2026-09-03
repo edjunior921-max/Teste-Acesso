@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BS2 | Recuperação de Acesso</title>
+
+<style>
+
+:root{
+    --primary:#3438D6;
+    --primary-dark:#2529AA;
+    --bg:#f4f6fb;
+    --text:#1f2937;
+    --text-light:#6b7280;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:var(--bg);
+}
+
+.header{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    text-align:center;
+    padding:40px 20px 140px;
+}
+
+.logo{
+    width:140px;
+    display:block;
+    margin:0 auto 25px auto;
+}
+
+.title{
+    color:#ffffff;
+    font-size:42px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.subtitle{
+    color:rgba(255,255,255,.9);
+    font-size:18px;
+}
+
+.container{
+    max-width:800px;
+    margin:-70px auto 30px;
+    padding:0 20px;
+}
+
+.card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#fff;
+    text-decoration:none;
+    color:inherit;
+    border-radius:20px;
+    padding:24px;
+    margin-bottom:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+
+.left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.icon{
+    width:60px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    font-size:28px;
+}
+
+.icon-password{
+    background:#EEF2FF;
+}
+
+.icon-lock{
+    background:#EAFBF0;
+}
+
+.card-title{
+    font-size:24px;
+    font-weight:600;
+    color:var(--text);
+}
+
+.card-description{
+    color:var(--text-light);
+    margin-top:4px;
+}
+
+.arrow{
+    color:var(--primary);
+    font-size:28px;
+    font-weight:bold;
+}
+
+.help{
+    background:#fff;
+    border-radius:18px;
+    padding:22px;
+    text-align:center;
+    color:var(--text);
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.help strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.footer{
+    text-align:center;
+    font-size:13px;
+    color:#6b7280;
+    padding:24px;
+}
+
+@media(max-width:768px){
+
+    .title{
+        font-size:30px;
+    }
+
+    .subtitle{
+        font-size:16px;
+    }
+
+    .card-title{
+        font-size:20px;
+    }
+
+    .icon{
+        width:52px;
+        height:52px;
+        font-size:24px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <img src="logo-bs2.png" alt="Banco BS2" class="logo">
+
+    <h1 class="title">
+        Recuperação de Acesso
+    </h1>
+
+    <p class="subtitle">
+        Escolha uma das opções abaixo para continuar.
+    </p>
+
+</header>
+
+<main class="container">
+
+    <a href="https://passwordreset.microsoftonline.com/"
+       target="_blank"
+       class="card">
+
+        <div class="left">
+
+            <div class="icon icon-password">
+                🔑
+            </div>
+
+            <div>
+                <div class="card-title">
+                    Esqueci minha senha
+                </div>
+
+                <div class="card-description">
+                    Redefinir minha senha de acesso.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+    </a>
+
+    <a href="https://passwordreset.microsoftonline.com/"
+       target="_blank"
+       class="card">
+
+        <div class="left">
+
+            <div class="icon icon-lock">
+                🔓
+            </div>
+
+            <div>
+                <div class="card-title">
+                    Conta bloqueada
+                </div>
+
+                <div class="card-description">
+                    Desbloquear minha conta.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+    </a>
+
+    <div class="help">
+        <strong>Ainda precisa de ajuda?</strong>
+        Entre em contato com o Service Desk do Banco BS2.
+    </div>
+
+</main>
+
+<footer class="footer">
+    © Banco BS2 • Tecnologia da Informação
+</footer>
+
+</body>
+</html>
