@@ -1,510 +1,2445 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Autoatendimento | BS2</title>
 
-<title>BS2 | Portal de Autoatendimento</title>
+  <style>
+    :root {
+      --navy: #082b4c;
+      --navy-2: #0d3d68;
+      --blue: #0877c9;
+      --blue-light: #eaf5fc;
+      --green: #16a765;
+      --red: #d64545;
+      --background: #f4f7fa;
+      --white: #ffffff;
+      --text: #183247;
+      --muted: #6b7c8d;
+      --border: #dce5ec;
+      --shadow: 0 10px 30px rgba(8, 43, 76, 0.08);
+      --radius: 16px;
+    }
 
-<style>
+    * {
+      box-sizing: border-box;
+    }
 
-:root{
-    --primary:#3438D6;
-    --primary-dark:#2529AA;
-    --accent:#25D366;
-    --bg:#f4f6fb;
-    --white:#ffffff;
-    --text:#1f2937;
-    --secondary:#6b7280;
+ body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+linear-gradient(
+    180deg,
+    #3f3ad1 0%,
+    #2d3eb3 45%,
+    #102f57 100%
+);
+
+    color: white;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+
+    .background-effects {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    overflow: hidden;
 }
 
-body{
-    font-family:'Segoe UI',sans-serif;
-    background:var(--bg);
+.background-effects span {
+
+    position: absolute;
+
+    width: 6px;
+    height: 6px;
+
+  background: rgba(255,255,255,.7);
+
+box-shadow:
+    0 0 8px rgba(255,255,255,.8),
+    0 0 16px rgba(255,255,255,.5);
+
+    border-radius: 50%;
+
+    animation:
+        float 8s infinite;
 }
 
-.header{
-    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-    color:white;
+.background-effects span:nth-child(1) {
+    top: 20%;
+    left: 25%;
+}
+
+.background-effects span:nth-child(2) {
+    top: 35%;
+    right: 15%;
+}
+
+.background-effects span:nth-child(3) {
+    bottom: 25%;
+    left: 20%;
+}
+
+.background-effects span:nth-child(4) {
+    bottom: 15%;
+    right: 20%;
+}
+
+.background-effects span:nth-child(5) {
+    top: 10%;
+    left: 60%;
+}
+
+@keyframes float {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+
+}
+
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .screen {
+      min-height: 100vh;
+    }
+
+    /* =========================
+       LOGIN
+       ========================= */
+
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: transparent;
+    }
+
+    .login-card {
+
+    background: transparent;
+
+    box-shadow: none;
+
+    width: 520px;
+
+    padding: 20px;
+}
+    
+
+    .brand {
+    color: white;
+    font-size: 56px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255,255,255,.25);
+}
+
+.logo {
+    width: 280px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.welcome-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+}
+.field-label {
+    display: none;
+}
+
+    .brand span {
+      color: var(--blue);
+    }
+
+
+.login-card h1 {
+    color: white;
+    text-align: center;
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+
+.welcome-text {
+    color: white;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+    .login-card p {
+    color: rgba(255,255,255,.85);
+    text-align: center;
+}
+
+    .field-label {
+      display: block;
+      font-weight: 700;
+      margin: 25px 0 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      outline: none;
+      background: var(--white);
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(8, 119, 201, 0.12);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 14px 18px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      width: 100%;
+      margin-top: 18px;
+    }
+
+    .btn-secondary {
+      background: #eef3f7;
+      color: var(--navy);
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-danger {
+      background: #fff0f0;
+      color: var(--red);
+    }
+
+    .error {
+      color: var(--red);
+      font-size: 14px;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    /* =========================
+       HEADER
+       ========================= */
+
+   header {
+  background: rgba(8, 43, 76, 0.85);
+  border-bottom: 1px solid rgba(255,255,255,.15);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+    .header-inner {
+      max-width: 1180px;
+      margin: auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .user-badge {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+}
+
+.user-badge strong {
+  color: white;
+}
+
+    /* =========================
+       MAIN
+       ========================= */
+
+    main {
+      max-width: 1180px;
+      margin: auto;
+      padding: 34px 24px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(
+        135deg,
+        var(--navy),
+        var(--navy-2)
+      );
+      color: white;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.86;
+    }
+
+    .section-title {
+      margin: 32px 0 15px;
+      font-size: 21px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+  transform: translateY(-3px);
+  border-color: #b8d6ea;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.equipment-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fff;
+  color: var(--text);
+}
+
+.equipment-item:hover {
+  border-color: var(--blue);
+  background: #f8fcff;
+}
+
+.equipment-item input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+.equipment-item:has(input:checked) {
+    border-color: #16a765;
+    background: #e8f8ef;
+    font-weight: 600;
+}
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px;
+    color: var(--navy);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      color: var(--navy);
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    /* =========================
+       INTERNAL
+       ========================= */
+
+    .content-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    color: var(--text);
+}
+    .content-card h2 {
+    color: var(--navy);
+    margin-top: 0;
+}
+
+.content-card p {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+    .back {
+      margin-bottom: 18px;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 17px;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      border-color: var(--blue);
+      background: #f8fcff;
+    }
+
+    .option strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .option span {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       STEPS
+       ========================= */
+
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 13px;
+      margin: 22px 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .step:before {
+      counter-increment: step;
+      content: counter(step);
+      min-width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 12px;
+      background: #fff8e8;
+      border: 1px solid #f1d79b;
+      margin: 18px 0;
+      color: #76540e;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 14px;
+      background: #f5fbf8;
+      border: 1px solid #cbe9da;
+    }
+
+    .result h3 {
+      margin-top: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 30px;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        padding: 15px 18px;
+      }
+
+      main {
+        padding: 24px 16px;
+      }
+
+      .login-card{
     text-align:center;
-    padding:30px;
 }
-
-.logo{
-    width:120px;
-    margin-bottom:20px;
-}
-
-.header h1{
-    margin-bottom:10px;
-}
-
-.container{
-    max-width:1200px;
-    margin:30px auto;
-    padding:20px;
-}
-
-.login-box{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
-    text-align:center;
-}
-
-input{
-    width:100%;
-    padding:15px;
-    margin-top:15px;
-    border:1px solid #ddd;
-    border-radius:10px;
-}
-
-.btn{
-    background:var(--primary);
-    color:white;
-    border:none;
-    padding:14px 24px;
-    border-radius:10px;
-    cursor:pointer;
-    margin-top:15px;
-    font-weight:600;
-}
-
-.btn:hover{
-    background:var(--primary-dark);
-}
-
-#portal{
-    display:none;
-}
-
-.hello{
-    font-size:24px;
-    margin-bottom:30px;
-}
-
-.section{
-    margin-bottom:40px;
-}
-
-.section h2{
-    margin-bottom:15px;
-    color:var(--primary);
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:15px;
-}
-
-.card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
-    cursor:pointer;
-    transition:.2s;
-}
-
-.card:hover{
-    transform:translateY(-3px);
-}
-
-.card-title{
-    font-weight:700;
-    margin-bottom:8px;
-}
-
-.card-desc{
-    color:var(--secondary);
-    font-size:14px;
-}
-
-.footer{
-    text-align:center;
-    padding:20px;
-    color:#777;
-}
-
-.whatsapp-fixed{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#25D366;
-    color:white;
-    text-decoration:none;
-    padding:15px 20px;
-    border-radius:50px;
-    font-weight:bold;
-    box-shadow:0 5px 15px rgba(0,0,0,.2);
-}
-
-.modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.6);
-}
-
-.modal-content{
-    background:white;
-    max-width:700px;
-    margin:60px auto;
-    padding:25px;
-    border-radius:15px;
-}
-
-.modal-content h3{
-    margin-bottom:15px;
-}
-
-.close{
-    float:right;
-    cursor:pointer;
-    font-weight:bold;
-    font-size:20px;
-}
-
-.steps{
-    margin-top:15px;
-}
-
-.steps li{
-    margin-bottom:12px;
-}
-
-.btn-whatsapp{
-    background:#25D366;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    margin-top:20px;
-}
-
-</style>
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="header">
+  <!-- =========================
+       TELA DE IDENTIFICAÇÃO
+       ========================= -->
 
-    <img src="logo-bs2.png"
-         class="logo"
-         alt="BS2">
+  <div id="loginScreen" class="screen">
+    <div class="background-effects">
 
-    <h1>Portal de Autoatendimento</h1>
-
-    <p>Service Desk BS2</p>
-
-</header>
-
-<div class="container">
-
-<div id="login" class="login-box">
-
-    <h2>Identifique-se</h2>
-
-    <p>Informe seu BSI, BBS ou e-mail corporativo.</p>
-
-    <input
-        type="text"
-        id="usuario"
-        placeholder="Ex.: BSI92423">
-
-    <button class="btn" onclick="entrar()">
-        Continuar
-    </button>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 
 </div>
 
-<div id="portal">
+    <div class="login-wrap">
 
-    <div class="hello">
-        Olá, <strong id="nomeUsuario"></strong>
+      <div class="login-card">
+
+        <div class="brand">
+    <img src="logo-bs2.png" alt="BS2" class="logo">
+</div>
+
+        <h1>
+  Portal de Autoatendimento
+</h1>
+
+<p class="welcome-text">
+  Bem-vindo!
+</p>
+
+<p>
+  Informe seu BSI, BBS ou e-mail corporativo
+  para acessar os serviços disponíveis.
+</p>
+
+      
+
+        <input
+          id="identifier"
+          type="text"
+          placeholder="Ex.: BSI, BBS ou e-mail corporativo"
+          autocomplete="off"
+        >
+
+        <div
+          id="loginError"
+          class="error"
+        ></div>
+
+        <button
+          class="btn btn-primary"
+          onclick="identifyUser()"
+        >
+          CONTINUAR →
+        </button>
+
+      </div>
+
     </div>
 
-    <!-- CREDENCIAIS -->
+  </div>
 
-    <div class="section">
 
-        <h2>🔐 Credenciais</h2>
+  <!-- =========================
+       PORTAL PRINCIPAL
+       ========================= -->
 
-        <div class="grid">
+  <div
+    id="portalScreen"
+    class="screen hidden"
+  >
 
-            <div class="card"
-                 onclick="window.open('https://passwordreset.microsoftonline.com/')">
+    <header>
 
-                <div class="card-title">
-                    🔑 Troca de Senha
-                </div>
+      <div class="header-inner">
 
-                <div class="card-desc">
-                    Redefinir senha corporativa.
-                </div>
+       <div class="brand">
 
-            </div>
+  
+      
+</div>
 
-            <div class="card"
-                 onclick="window.open('https://passwordreset.microsoftonline.com/')">
+        <div class="user-badge">
+          Usuário:
+          <strong id="userName"></strong>
+        </div>
+      
 
-                <div class="card-title">
-                    🔓 Usuário Bloqueado
-                </div>
+      </div>
 
-                <div class="card-desc">
-                    Recuperar acesso à conta.
-                </div>
+    </header>
 
-            </div>
 
-            <div class="card">
+    <main>
 
-                <div class="card-title">
-                    🆕 Primeiro Acesso
-                </div>
+      <div class="hero">
 
-                <div class="card-desc">
-                    Contatar equipe de onboarding.
-                </div>
+        <h1 id="welcome">
+          Olá! 👋
+        </h1>
 
-            </div>
+        <p>
+          Resolva sua necessidade de forma rápida
+          antes de acionar o Service Desk.
+        </p>
 
+      </div>
+
+
+      <h2 class="section-title">
+        Como podemos ajudar?
+      </h2>
+
+
+      <div class="grid">
+
+    <div
+    class="card"
+    onclick="openSection('people')"
+>
+
+    <h3 class="card-title">
+        👥 Onboarding / Offboarding
+    </h3>
+
+    <p>
+        Novos colaboradores e desligamentos.
+    </p>
+
+</div>
+
+    
+        <div
+    class="card"
+    onclick="openSection('credentials')"
+>
+
+    <h3 class="card-title">
+        🔐 Credenciais
+    </h3>
+
+    <p>
+        Esqueci minha senha ou usuário bloqueado.
+    </p>
+
+</div>
+
+
+        <div
+    class="card"
+    onclick="openSection('catalog')"
+>
+
+    <h3 class="card-title">
+        📋 Catálogo de Serviços
+    </h3>
+
+    <p>
+        Solicite acessos, problemas no equipamento,
+        instalação de softwares e outros serviços.
+    </p>
+
+</div>
+
+
+
+        <div
+    class="card"
+    onclick="openSection('problems')"
+>
+
+    <h3 class="card-title">
+        🛠️ Problemas Recorrentes
+    </h3>
+
+    <p>
+        Confira procedimentos para problemas
+        comuns no computador.
+    </p>
+
+</div>
+    
+
+  </div>
+
+
+    </main>
+
+
+    <footer>
+      Portal de Autoatendimento • Service Desk BS2
+    </footer>
+
+  </div>
+
+
+  <!-- =========================
+       TELAS INTERNAS
+       ========================= -->
+
+  <div
+    id="contentScreen"
+    class="screen hidden"
+  >
+
+    <header>
+
+      <div class="header-inner">
+
+        <div class="brand-header">
+    Portal de Autoatendimento
+</div>
+
+        <div class="user-badge">
+          Olá,
+          <strong id="contentUser"></strong>
         </div>
 
-    </div>
+      </div>
 
-    <!-- CATÁLOGOS -->
+    </header>
 
-    <div class="section">
 
-        <h2>🎫 Catálogo de Serviços</h2>
+    <main>
 
-        <div class="grid">
+      <button
+        class="btn btn-secondary back"
+        onclick="goHome()"
+      >
+        ← Voltar
+      </button>
 
-            <div class="card"
-            onclick="window.open('https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOYWLSIOYAJAE5JYF/srm','_blank')">
+      <div id="content"></div>
 
-    <div class="card-title">
-        📁 Acesso à Pasta Corporativa
-    </div>
+    </main>
 
-    <div class="card-desc">
-        Solicitar acesso às pastas corporativas.
-    </div>
+
+    <footer>
+      Portal de Autoatendimento • Service Desk BS2
+    </footer>
+
+  </div>
+
+
+  <script>
+
+    /* =========================
+       BASE FICTÍCIA
+       ========================= */
+
+    const employees = {
+
+      "BSI92423": "João Silva",
+
+      "BSI12345": "Maria Souza",
+
+      "BBS54321": "Ana Costa",
+
+      "joao.silva@bs2.com.br":
+        "João Silva",
+
+      "maria.souza@bs2.com.br":
+        "Maria Souza",
+
+      "ana.costa@bs2.com.br":
+        "Ana Costa"
+
+    };
+
+
+    /* =========================
+       SESSÃO
+       ========================= */
+
+    let session = {
+
+    identifier: "",
+
+    name: "",
+
+    loc: "",
+
+    problem: "",
+
+    steps: [],
+
+    currentStep: 0
+
+};
+
+
+    /* =========================
+       MÉTRICAS
+       ========================= */
+
+    function logEvent(
+      type,
+      data = {}
+    ) {
+
+      const events =
+        JSON.parse(
+          localStorage.getItem(
+            "bs2_portal_events"
+          ) || "[]"
+        );
+
+
+      events.push({
+
+        timestamp:
+          new Date().toISOString(),
+
+        type,
+
+        identifier:
+          session.identifier,
+
+        name:
+          session.name,
+
+        ...data
+
+      });
+
+
+      localStorage.setItem(
+
+        "bs2_portal_events",
+
+        JSON.stringify(events)
+
+      );
+
+    }
+
+
+    /* =========================
+       IDENTIFICAÇÃO
+       ========================= */
+
+    function identifyUser() {
+
+      const input =
+        document.getElementById(
+          "identifier"
+        );
+
+
+      const value =
+        input.value.trim();
+
+
+      if (!value) {
+
+        document.getElementById(
+          "loginError"
+        ).textContent =
+          "Informe seu BSI, BBS ou e-mail corporativo.";
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      session.identifier =
+        value;
+
+
+      const normalized =
+        value.toLowerCase();
+
+
+      session.name =
+        employees[normalized] ||
+        employees[value.toUpperCase()] ||
+        "Colaborador";
+
+
+      logEvent(
+        "identificacao"
+      );
+
+
+      document.getElementById(
+        "userName"
+      ).textContent =
+        session.name;
+
+
+      document.getElementById(
+  "welcome"
+).textContent =
+  `Olá, ${session.name}! 👋`;
+
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .classList
+        .add("hidden");
+
+
+      document
+        .getElementById(
+          "portalScreen"
+        )
+        .classList
+        .remove("hidden");
+
+    }
+
+
+    /* ENTER */
+
+    document
+      .getElementById("identifier")
+      .addEventListener(
+        "keydown",
+        function(e) {
+
+          if (e.key === "Enter") {
+
+            identifyUser();
+
+          }
+
+        }
+      );
+
+
+    /* =========================
+       HOME
+       ========================= */
+
+    function goHome() {
+
+      document
+        .getElementById(
+          "contentScreen"
+        )
+        .classList
+        .add("hidden");
+
+
+      document
+        .getElementById(
+          "portalScreen"
+        )
+        .classList
+        .remove("hidden");
+
+    }
+
+
+    /* =========================
+       MOSTRAR CONTEÚDO
+       ========================= */
+
+    function showContent(html) {
+
+      document
+        .getElementById(
+          "content"
+        )
+        .innerHTML =
+        html;
+
+
+      document
+        .getElementById(
+          "portalScreen"
+        )
+        .classList
+        .add("hidden");
+
+
+      document
+        .getElementById(
+          "contentScreen"
+        )
+        .classList
+        .remove("hidden");
+
+
+      document
+        .getElementById(
+          "contentUser"
+        )
+        .textContent =
+        session.name;
+
+    }
+
+
+    /* =========================
+       SEÇÕES
+       ========================= */
+
+    function openSection(section) {
+
+      logEvent(
+        "secao_acessada",
+        {
+          section
+        }
+      );
+
+
+      /* CREDENCIAIS */
+
+      if (
+        section === "credentials"
+      ) {
+
+        showContent(`
+
+          <div class="content-card">
+
+            <h2>
+              🔐 Credenciais
+            </h2>
+
+            <p>
+              Escolha a situação que mais se
+              aproxima do que está acontecendo.
+            </p>
+
+
+            <div class="options">
+
+
+              <button
+                class="option"
+                onclick="openCredential('forgot')"
+              >
+
+                <strong>
+                  Esqueci minha senha
+                </strong>
+
+                <span>
+                  Acesse o portal oficial para
+                  redefinir sua senha.
+                </span>
+
+              </button>
+
+
+              <button
+                class="option"
+                onclick="openCredential('blocked')"
+              >
+
+                <strong>
+                   Meu usuário está bloqueado
+                </strong>
+
+                <span>
+                  Inicie o procedimento de
+                  redefinição/desbloqueio.
+                </span>
+
+              </button>
+
+
+
+
+            </div>
+
+          </div>
+
+        `);
+
+      }
+
+
+      /* CATÁLOGO */
+
+      if (
+        section === "catalog"
+      ) {
+
+        showContent(`
+
+          <div class="content-card">
+
+            <h2>
+              📋 Catálogo de Serviços
+            </h2>
+
+            <p>
+              Selecione o serviço que você
+              precisa solicitar.
+            </p>
+
+
+            <div class="options">
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Acesso à Pasta Corporativa',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOYWLSIOYAJAE5JYF/srm'
+    )"
+  >
+    <strong>📁 Acesso à Pasta Corporativa</strong>
+    <span>Solicite acesso a pastas compartilhadas e recursos de rede.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Acesso a Sistemas Corporativos',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAP5XL79P5AX8CIH1J/srm'
+    )"
+  >
+    <strong>🔑 Acesso a Sistemas Corporativos</strong>
+    <span>Solicite acesso a sistemas utilizados em suas atividades.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Instalação ou Atualização de Software',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOZF3VUOYJBDQ6FUF/srm'
+    )"
+  >
+    <strong>💻 Instalação ou Atualização de Software</strong>
+    <span>Instale ou atualize aplicativos corporativos.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Reset de MFA',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOZTXVYOYX9QD8LJC/srm'
+    )"
+  >
+    <strong>📱 Reset de MFA (Authenticator)</strong>
+    <span>Troca de celular ou problemas com autenticação multifator.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Problema de Computador',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOYXBYIOYAPGD52S2/srm'
+    )"
+  >
+    <strong>💻 Problema de Computador</strong>
+    <span>Notebook não liga, travamentos ou mensagens de erro.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Problema de Software',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOYXGG2OYAT4I53K0/srm'
+    )"
+  >
+    <strong>⚙️ Problema de Software</strong>
+    <span>Aplicativos com erro ou comportamento inesperado.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Problema de Impressora',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAPDG3Q9PCJVSOFOK6/srm'
+    )"
+  >
+    <strong>🖨️ Problema de Impressora</strong>
+    <span>Falhas de impressão ou conexão com impressoras.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Erro de Acesso',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGAA5V0GGIKQAOYWLAUOYAIIP5JR8/srm'
+    )"
+  >
+    <strong>🚫 Erro de Acesso</strong>
+    <span>Problemas para acessar usuários, sistemas ou pastas.</span>
+  </button>
+
+  <button
+    class="option"
+    onclick="catalogAction(
+      'Equipamento Danificado',
+      'https://atrium-dwp.onbmc.com/dwp/app/#/srm/profile/SRGC0D1OGPLSHARM5KK6RM5KK6XFL9/srm'
+    )"
+  >
+    <strong>🖱️ Equipamento Danificado</strong>
+    <span>Mouse, teclado, headset ou notebook com defeito.</span>
+  </button>
 
 </div>
 
-            <div class="card">
-                <div class="card-title">👤 Criação de Usuário</div>
-            </div>
+          </div>
 
-            <div class="card">
-                <div class="card-title">📧 Grupo de E-mail</div>
-            </div>
+        `);
 
-            <div class="card">
-                <div class="card-title">🔑 Solicitação de Acesso</div>
-            </div>
+      }
 
-            <div class="card">
-                <div class="card-title">💻 Equipamentos</div>
-            </div>
+      if (
+  section === "people"
+) {
 
-            <div class="card">
-                <div class="card-title">📱 Celular Corporativo</div>
-            </div>
+  showContent(`
 
-        </div>
+    <div class="content-card">
 
-    </div>
+      <h2>
+        👥 Onboarding / Offboarding
+      </h2>
 
-    <!-- PROBLEMAS -->
+      <p>
+        Escolha o processo desejado.
+      </p>
 
-    <div class="section">
+      <div class="options">
 
-        <h2>🛠️ Problemas Recorrentes</h2>
+        <button
+          class="option"
+          onclick="showOnboardingForm('onboarding')"
+        >
 
-        <div class="grid">
+          <strong>
+            ✅ Onboarding
+          </strong>
 
-            <div class="card"
-                 onclick="abrirPastas()">
+          <span>
+            Registrar equipamentos entregues ao colaborador.
+          </span>
 
-                <div class="card-title">
-                    🌐 Sites Internos e Pastas
-                </div>
+        </button>
 
-                <div class="card-desc">
-                    Orientações de autoatendimento.
-                </div>
+        <button
+          class="option"
+          onclick="showOnboardingForm('offboarding')"
+        >
 
-            </div>
+          <strong>
+            🚪 Offboarding
+          </strong>
 
-            <div class="card"
-                 onclick="abrirLentidao()">
+          <span>
+            Registrar equipamentos devolvidos pelo colaborador.
+          </span>
 
-                <div class="card-title">
-                    🐢 Lentidão ou Travamento
-                </div>
+        </button>
 
-                <div class="card-desc">
-                    Verificações rápidas.
-                </div>
-
-            </div>
-
-        </div>
+      </div>
 
     </div>
 
-</div>
+  `);
 
-</div>
-
-<div id="modal" class="modal">
-
-<div class="modal-content">
-
-<span class="close"
-      onclick="fecharModal()">
-×
-</span>
-
-<h3 id="tituloModal"></h3>
-
-<div id="conteudoModal"></div>
-
-</div>
-
-</div>
-
-"
-   class="whatsapp-fixed">
-
-💬 Ajuda
-
-</a>
-
-<script>
-
-function entrar(){
-
-let usuario =
-document.getElementById("usuario").value;
-
-if(usuario.trim() === ""){
-alert("Informe seu usuário.");
-return;
 }
 
-localStorage.setItem("usuario",usuario);
 
-document.getElementById("nomeUsuario")
-.innerText = usuario;
+      /* PROBLEMAS */
 
-document.getElementById("login").style.display="none";
-document.getElementById("portal").style.display="block";
+      if (
+        section === "problems"
+      ) {
+
+        showContent(`
+
+          <div class="content-card">
+
+            <h2>
+              🛠️ Problemas Recorrentes
+            </h2>
+
+            <p>
+              Esses procedimentos são voltados
+              principalmente para problemas
+              relacionados ao computador.
+            </p>
+
+            <p>
+              Para esse fluxo, precisamos
+              identificar o equipamento pelo
+              <strong>LOC</strong>.
+            </p>
+
+
+            <div class="options">
+
+
+              <button
+                class="option"
+                onclick="askLoc(
+                  'Lentidão ou Travamento'
+                )"
+              >
+
+                <strong>
+                  🐢 Lentidão ou Travamento
+                </strong>
+
+                <span>
+                  Computador lento, travando
+                  ou congelando.
+                </span>
+
+              </button>
+
+
+              <button
+                class="option"
+                onclick="askLoc(
+                  'Rede / Conexão'
+                )"
+              >
+
+                <strong>
+                  🌐 Rede / Conexão
+                </strong>
+
+                <span>
+                  Problemas para acessar internet
+                  ou recursos corporativos.
+                </span>
+
+              </button>
+
+
+              <button
+                class="option"
+                onclick="askLoc(
+                  'Outlook'
+                )"
+              >
+
+                <strong>
+                  ✉️ Outlook
+                </strong>
+
+                <span>
+                  Problemas comuns no Outlook.
+                </span>
+
+              </button>
+
+
+              <button
+                class="option"
+                onclick="askLoc(
+                  'Impressora'
+                )"
+              >
+
+                <strong>
+                  🖨️ Impressora
+                </strong>
+
+                <span>
+                  Problemas de impressão
+                  ou conexão.
+                </span>
+
+              </button>
+
+
+              <button
+                class="option"
+                onclick="askBitlocker()"
+              >
+
+                <strong>
+                  🔒 BitLocker
+                </strong>
+
+                <span>
+                  Solicitação relacionada à
+                  chave de recuperação.
+                </span>
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+        `);
+
+      }
+
+    }
+
+
+    /* =========================
+       CREDENCIAIS
+       ========================= */
+
+    function openCredential(type) {
+
+      const labels = {
+
+        forgot:
+          "Esqueci minha senha",
+
+        blocked:
+          "Minha senha está bloqueada",
+
+        first:
+          "Primeiro acesso"
+
+      };
+
+
+      logEvent(
+        "opcao_selecionada",
+        {
+          section: "Credenciais",
+          option: labels[type]
+        }
+      );
+
+
+      /*
+        RESET DE SENHA
+
+        CLIQUE DIRETO PARA
+        O DESTINO EXTERNO.
+      */
+
+      if (
+        type === "forgot" ||
+        type === "blocked"
+      ) {
+
+        const url =
+          "https://passwordreset.microsoftonline.com/";
+
+
+        window.open(
+          url,
+          "_blank",
+          "noopener,noreferrer"
+        );
+
+
+        return;
+
+      }
+
+
+      /* PRIMEIRO ACESSO */
+
+      showContent(`
+
+        <div class="content-card">
+
+          <h2>
+            👋 Primeiro acesso
+          </h2>
+
+          <p>
+            O primeiro acesso é tratado pelo
+            time de <strong>Onboarding</strong>,
+            e não pelo fluxo comum do
+            Service Desk.
+          </p>
+
+          <div class="alert">
+
+            O canal de contato do Onboarding
+            pode ser configurado aqui quando
+            a informação oficial estiver disponível.
+
+          </div>
+
+
+          <button
+            class="btn btn-secondary"
+            onclick="goHome()"
+          >
+            VOLTAR AO PORTAL
+          </button>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================
+       CATÁLOGO
+       ========================= */
+
+    function catalogAction(
+      name,
+      url
+    ) {
+
+      logEvent(
+        "catalogo_selecionado",
+        {
+          service: name
+        }
+      );
+
+
+      /*
+        SE EXISTIR URL:
+
+        CLIQUE →
+        DESTINO DIRETO
+      */
+
+      if (url) {
+
+        window.open(
+          url,
+          "_blank",
+          "noopener,noreferrer"
+        );
+
+        return;
+
+      }
+
+
+      /*
+        SERVIÇOS QUE AINDA
+        NÃO POSSUEM LINK REAL
+      */
+
+      showContent(`
+
+        <div class="content-card">
+
+          <h2>
+            📋 ${name}
+          </h2>
+
+          <p>
+            O fluxo está preparado no portal.
+          </p>
+
+          <div class="alert">
+
+            Este item ainda precisa receber
+            o link oficial do catálogo.
+
+          </div>
+
+
+          <button
+            class="btn btn-secondary"
+            onclick="goHome()"
+          >
+            VOLTAR AO PORTAL
+          </button>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================
+       PROBLEMAS RECORRENTES
+       ========================= */
+
+    function askLoc(problem) {
+
+      session.problem =
+        problem;
+
+      session.steps = [];
+
+
+      logEvent(
+        "problema_selecionado",
+        {
+          problem
+        }
+      );
+
+
+      showContent(`
+
+        <div class="content-card">
+
+          <h2>
+            🛠️ ${problem}
+          </h2>
+
+          <p>
+            Antes de iniciar o procedimento,
+            informe o <strong>LOC</strong>
+            do equipamento.
+          </p>
+
+          <p
+            style="
+              font-size:14px;
+              color:var(--muted)
+            "
+          >
+
+            Exemplos:
+
+            <strong>
+              LOCNTBBHZ 12345
+            </strong>
+
+            ou
+
+            <strong>
+              LOCNTBSPO 12345
+            </strong>.
+
+          </p>
+
+
+          <label
+            class="field-label"
+            for="locInput"
+          >
+            LOC do equipamento
+          </label>
+
+
+          <input
+            id="locInput"
+            placeholder=""
+            autocomplete="off"
+          >
+
+
+          <div
+            id="locError"
+            class="error"
+          ></div>
+
+
+          <button
+            class="btn btn-primary"
+            onclick="validateLoc()"
+          >
+            CONTINUAR →
+          </button>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================
+       VALIDAR LOC
+       ========================= */
+
+    function validateLoc() {
+
+      const input =
+        document.getElementById(
+          "locInput"
+        );
+
+
+      const loc =
+        input.value
+          .trim()
+          .toUpperCase();
+
+
+      if (!loc) {
+
+  document.getElementById(
+    "locError"
+  ).textContent =
+    "Informe o LOC ou identificação do equipamento.";
+
+  input.focus();
+
+  return;
+
+}
+      
+
+
+      session.loc =
+        loc;
+
+
+      logEvent(
+        "loc_informado",
+        {
+          loc
+        }
+      );
+
+
+      showProblemSteps(
+        session.problem
+      );
+
+    }
+
+    
+
+
+    /* =========================
+       PASSOS DOS PROBLEMAS
+       ========================= */
+
+    function showProblemSteps(problem) {
+
+    const procedures = {
+
+        "Lentidão ou Travamento": [
+
+            "Reinicie o computador e aguarde o carregamento completo.",
+
+            "Feche programas e abas que não estejam sendo utilizados.",
+
+            "Verifique se há aplicativos consumindo muitos recursos no Gerenciador de Tarefas.",
+
+            "Confirme se o Windows e os aplicativos corporativos estão atualizados."
+
+        ],
+
+        "Rede / Conexão": [
+
+            "Verifique se o Wi‑Fi ou cabo de rede está conectado.",
+
+            "Desconecte e conecte novamente a rede.",
+
+            "Reinicie o computador.",
+
+            "Teste novamente o acesso aos sistemas corporativos."
+
+        ],
+
+        "Outlook": [
+
+            "Feche o Outlook completamente e abra novamente.",
+
+            "Verifique se a conexão de rede está funcionando.",
+
+            "Reinicie o computador.",
+
+            "Teste novamente o envio e recebimento de mensagens."
+
+        ],
+
+        "Impressora": [
+
+            "Confirme se a impressora está ligada e conectada.",
+
+            "Verifique se a impressora correta está selecionada.",
+
+            "Limpe documentos presos na fila de impressão.",
+
+            "Reinicie o computador e tente imprimir novamente."
+
+        ]
+
+    };
+
+    session.steps =
+        procedures[problem] || [];
+
+    session.currentStep = 0;
+
+    mostrarPassoAtual();
+
 }
 
-function abrirPastas(){
 
-document.getElementById("tituloModal").innerHTML =
-"🌐 Sites Internos e Pastas";
+function mostrarPassoAtual() {
 
-document.getElementById("conteudoModal").innerHTML = `
-<ul class="steps">
-<li>🔄 Reinicie o equipamento</li>
-<li>🌐 Verifique o Zscaler</li>
-<li>📂 Teste: \\\\bbs2.local → BBS → Corporativos → Pasta G</li>
-</ul>
+    const passo =
+        session.steps[
+            session.currentStep
+        ];
 
-<button class="btn-whatsapp"
-onclick="chamarWhatsapp('Sites Internos e Pastas')">
-❌ Não resolveu
+    showContent(`
+
+        <div class="content-card">
+
+            <h2>
+                🛠️ ${session.problem}
+            </h2>
+
+            <p>
+                <strong>
+                    Passo ${session.currentStep + 1}
+                    de ${session.steps.length}
+                </strong>
+            </p>
+
+            <div class="step">
+
+                <div>
+                    ${passo}
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-success"
+                    onclick="resolved(true)"
+                >
+                    ✅ Funcionou
+                </button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="proximoPasso()"
+                >
+                    ❌ Não funcionou
+                </button>
+
+            </div>
+
+        </div>
+
+    `);
+
+}
+
+
+function proximoPasso() {
+
+    session.currentStep++;
+
+    if (
+        session.currentStep >=
+        session.steps.length
+    ) {
+
+        escalateToWhatsApp();
+
+        return;
+
+    }
+
+    mostrarPassoAtual();
+
+}
+function resolved(ok) {
+
+    logEvent(
+        "resultado_autoatendimento",
+        {
+            problem: session.problem,
+            loc: session.loc,
+            result: ok
+                ? "resolvido"
+                : "nao_resolvido"
+        }
+    );
+
+    if (ok) {
+
+        showContent(`
+
+            <div class="content-card">
+
+                <h2>
+                    ✅ Problema resolvido!
+                </h2>
+
+                <div class="result">
+
+                    <h3>
+                        Autoatendimento concluído
+                    </h3>
+
+                    <p>
+
+                        Registramos que o problema
+
+                        <strong>
+                            ${session.problem}
+                        </strong>
+
+                        foi resolvido pelo Portal de Autoatendimento.
+
+                    </p>
+
+                </div>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="goHome()"
+                >
+                    VOLTAR AO PORTAL
+                </button>
+
+            </div>
+
+        `);
+
+        return;
+
+    }
+
+    escalateToWhatsApp();
+
+}
+    
+    function showOnboardingForm(type) {
+
+    const titulo =
+        type === "onboarding"
+            ? "✅ Onboarding"
+            : "🚪 Offboarding";
+
+    const acao =
+        type === "onboarding"
+            ? "entregues"
+            : "devolvidos";
+
+    showContent(`
+
+        <div class="content-card">
+
+            <h2>
+                ${titulo}
+            </h2>
+
+            <p>
+                Informe os dados do colaborador e selecione os equipamentos ${acao}.
+            </p>
+
+            <label class="field-label">
+                Nome Completo
+            </label>
+
+            <input
+                id="employeeName"
+                placeholder="Digite o nome completo"
+            >
+
+            <div class="equipment-grid">
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipNotebook">
+    💻 Notebook
+  </label>
+
+  <label class="equipment-item">
+  <input type="checkbox" id="equipHeadset">
+  🎧 Headset
+</label>
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipCarregador">
+    🔌 Carregador
+  </label>
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipMouse">
+    🖱️ Mouse
+  </label>
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipTeclado">
+    ⌨️ Teclado
+  </label>
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipSuporte">
+    🖥️ Suporte
+  </label>
+
+  <label class="equipment-item">
+    <input type="checkbox" id="equipMochila">
+    🎒 Mochila
+  </label>
+
+</div>
+
+</div>
+
+            <button
+    class="btn btn-success"
+    onclick="sendPeopleWhatsApp('${type}')"
+>
+    ${type === "onboarding"
+        ? "🚀 INICIAR PROCESSO DE ONBOARDING"
+        : "🚀 INICIAR PROCESSO DE OFFBOARDING"}
 </button>
-`;
 
-document.getElementById("modal").style.display="block";
-}
+        </div>
 
-function abrirLentidao(){
-
-document.getElementById("tituloModal").innerHTML =
-"🐢 Lentidão ou Travamento";
-
-document.getElementById("conteudoModal").innerHTML = `
-<ul class="steps">
-<li>🔄 Reinicie o equipamento</li>
-<li>✅ Feche aplicações não utilizadas</li>
-<li>✅ Verifique conexão de rede</li>
-</ul>
-
-<button class="btn-whatsapp"
-onclick="chamarWhatsapp('Lentidão ou Travamento')">
-❌ Não resolveu
-</button>
-`;
-
-document.getElementById("modal").style.display="block";
-}
-
-function fecharModal(){
-document.getElementById("modal").style.display="none";
-}
-
-function chamarWhatsapp(categoria){
-
-let usuario =
-localStorage.getItem("usuario");
-
-let mensagem =
-`Olá.
-
-Usuário: ${usuario}
-
-Categoria: ${categoria}
-
-Segui as orientações do Portal de Autoatendimento e o problema persiste.`;
-
-window.open(
-"https://wa.me/553130788130?text=" +
-encodeURIComponent(mensagem)
-);
+    `);
 
 }
 
-function falarAtendente(){
+function sendPeopleWhatsApp(type) {
 
-let usuario =
-localStorage.getItem("usuario") || "";
+    
 
-let mensagem =
-`Olá.
+    const nome =
+        document.getElementById(
+            "employeeName"
+        ).value;
 
-Usuário: ${usuario}
+    if (!nome) {
 
-Preciso falar com um atendente.`;
+        alert(
+            "Informe o nome do colaborador."
+        );
 
-window.open(
-"https://wa.me/5531997760983?text=" +
-encodeURIComponent(mensagem)
-);
+        return;
+
+    }
+
+    const equipamentos = [];
+
+    if (document.getElementById("equipNotebook").checked)
+
+        equipamentos.push("Notebook");
+    if (document.getElementById("equipHeadset").checked)
+    equipamentos.push("Headset");
+
+    if (document.getElementById("equipCarregador").checked)
+        equipamentos.push("Carregador");
+
+    if (document.getElementById("equipMouse").checked)
+        equipamentos.push("Mouse");
+
+    if (document.getElementById("equipTeclado").checked)
+        equipamentos.push("Teclado");
+
+    if (document.getElementById("equipSuporte").checked)
+        equipamentos.push("Suporte");
+
+    if (document.getElementById("equipMochila").checked)
+        equipamentos.push("Mochila");
+
+        if (equipamentos.length === 0) {
+
+    alert(
+        "Selecione pelo menos um equipamento."
+    );
+
+    return;
 
 }
 
-</script>
+    const processo =
+        type === "onboarding"
+            ? "ONBOARDING"
+            : "OFFBOARDING";
+
+    const descricao =
+        type === "onboarding"
+            ? "Equipamentos entregues"
+            : "Equipamentos devolvidos";
+
+    const mensagem =
+
+type === "onboarding"
+
+? `Olá, me chamo ${nome}.
+
+Recebi os equipamentos e gostaria de realizar o primeiro acesso.
+
+Itens recebidos:
+
+${equipamentos.join("\n") || "Nenhum item informado"}`
+
+: `Olá, me chamo ${nome}.
+
+Estou realizando o processo de desligamento e gostaria de registrar a devolução dos equipamentos.
+
+Itens devolvidos:
+
+${equipamentos.join("\n") || "Nenhum item informado"}`;
+
+    window.open(
+        "https://wa.me/5531997760983?text=" +
+        encodeURIComponent(mensagem),
+        "_blank"
+    );
+
+}
+    
+
+
+    /* =========================
+       BITLOCKER
+       ========================= */
+
+    function askBitlocker() {
+
+      session.problem =
+        "BitLocker";
+
+      session.steps = [];
+
+
+      logEvent(
+        "problema_selecionado",
+        {
+          problem:
+            "BitLocker"
+        }
+      );
+
+
+      showContent(`
+
+        <div class="content-card">
+
+          <h2>
+            🔒 BitLocker
+          </h2>
+
+          <p>
+
+            Para localizar a chave de recuperação,
+            o Service Desk precisa identificar
+            o equipamento.
+
+          </p>
+
+
+          <label
+            class="field-label"
+            for="locInput"
+          >
+            LOC do equipamento
+          </label>
+
+
+          <input
+            id="locInput"
+            placeholder="LOC NPB BHZ 12345"
+            autocomplete="off"
+          >
+
+
+          <div
+            id="locError"
+            class="error"
+          ></div>
+
+
+          <button
+            class="btn btn-primary"
+            onclick="validateBitlockerLoc()"
+          >
+            CONTINUAR →
+
+            
+          </button>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================
+       VALIDAR LOC BITLOCKER
+       ========================= */
+
+    function validateBitlockerLoc() {
+
+      const input =
+        document.getElementById(
+          "locInput"
+        );
+
+
+      const loc =
+        input.value
+          .trim()
+          .toUpperCase();
+
+
+      const regex =
+        /^LOC\s+NPB\s+(BHZ|SPO)\s+\d+$/;
+
+
+      if (
+        !regex.test(loc)
+      ) {
+
+        document.getElementById(
+          "locError"
+        ).textContent =
+          "Informe o LOC no formato: LOC NPB BHZ 12345 ou LOC NPB SPO 12345.";
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      session.loc =
+        loc;
+
+
+      logEvent(
+        "loc_informado",
+        {
+          loc
+        }
+      );
+
+
+      logEvent(
+        "escalonamento",
+        {
+          problem:
+            "BitLocker",
+
+          loc
+        }
+      );
+
+
+      escalateToWhatsApp();
+
+    }
+
+
+    /* =========================
+       WHATSAPP
+       ========================= */
+
+    function escalateToWhatsApp() {
+
+      const phone =
+        "553130788130";
+
+
+      const message =
+
+`Olá, Service Desk.
+
+Usuário: ${session.name}
+
+Identificação: ${session.identifier}
+
+LOC: ${session.loc}
+
+Problema: ${session.problem}
+
+O usuário realizou o autoatendimento pelo Portal de Autoatendimento BS2 e o problema não foi resolvido.
+
+Favor verificar e dar continuidade ao atendimento.`;
+
+
+      const url =
+
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(
+          message
+        );
+
+
+      showContent(`
+
+        <div class="content-card">
+
+          <h2>
+            📲 Vamos encaminhar para
+            o Service Desk
+          </h2>
+
+
+          <p>
+
+            O autoatendimento não resolveu
+            o problema.
+
+          </p>
+
+
+          <p>
+
+            Já preparamos uma mensagem com
+            os dados necessários para facilitar
+            o atendimento.
+
+          </p>
+
+
+          <div class="alert">
+
+            <strong>
+              ${session.problem}
+            </strong>
+
+            <br>
+
+            LOC:
+            ${session.loc}
+
+          </div>
+
+
+          <button
+            class="btn btn-success"
+            onclick="openWhatsApp('${url}')"
+          >
+            ABRIR WHATSAPP DO SERVICE DESK ↗️
+          </button>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================
+       ABRIR WHATSAPP
+       ========================= */
+
+    function openWhatsApp(url) {
+
+      logEvent(
+        "whatsapp_aberto",
+        {
+          problem:
+            session.problem,
+
+          loc:
+            session.loc
+        }
+      );
+
+
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }
+
+  </script>
 
 </body>
 </html>
