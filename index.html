@@ -2069,9 +2069,9 @@ box-shadow:
           id="noUserButton"
           class="btn btn-secondary hidden"
           type="button"
-          onclick="openCredential('first')"
+          onclick="enterRestrictedAccess()"
         >
-          Não possuo usuário
+          Ainda não possui acesso?
         </button>
 
       </div>
@@ -2262,6 +2262,17 @@ box-shadow:
           <strong id="contentUser"></strong>
         </div>
 
+        <div id="restrictedModeNotice" class="hidden">
+          <strong>Fluxo de acesso sem cadastro</strong>
+          <button
+            class="btn btn-secondary"
+            type="button"
+            onclick="returnToIdentification()"
+          >
+            Voltar à identificação
+          </button>
+        </div>
+
       </div>
 
     </header>
@@ -2294,6 +2305,7 @@ box-shadow:
     let usersDatabaseLoaded = false;
     let usersDatabaseLoadPromise = null;
     let invalidLoginAttempts = 0;
+    let restrictedAccessMode = false;
 
     async function loadUsersDatabase() {
 
@@ -2780,6 +2792,11 @@ if (!normalizedValue) {
 
     function goHome() {
 
+      if (restrictedAccessMode) {
+        openSection("people");
+        return;
+      }
+
         if (!administrativeSession) {
           newJourneyPending = true;
         }
@@ -2810,6 +2827,23 @@ function goBackFromContent() {
     goHome();
 
 }
+
+  function enterRestrictedAccess() {
+    restrictedAccessMode = true;
+    document.getElementById("loginScreen").classList.add("hidden");
+    openSection("people");
+  }
+
+  function returnToIdentification() {
+    restrictedAccessMode = false;
+    document.getElementById("contentScreen").classList.add("hidden");
+    document.getElementById("portalScreen").classList.add("hidden");
+    document.getElementById("loginScreen").classList.remove("hidden");
+    document.getElementById("restrictedModeNotice").classList.add("hidden");
+    document.getElementById("contentUser").parentElement.classList.remove("hidden");
+    document.getElementById("loginError").textContent = "";
+    document.getElementById("identifier").focus();
+  }
 
 function logout() {
 
@@ -2877,13 +2911,26 @@ function logout() {
           "contentUser"
         )
         .textContent =
-        session.name;
+        restrictedAccessMode ? "" : session.name;
+
+      document
+        .getElementById("restrictedModeNotice")
+        .classList.toggle("hidden", !restrictedAccessMode);
+
+      document
+        .getElementById("contentUser")
+        .parentElement
+        .classList.toggle("hidden", restrictedAccessMode);
 
     }
 
     let activeSoftwareCategory = "all";
 
     function openSoftwareSection() {
+
+      if (restrictedAccessMode) {
+        return;
+      }
 
       activeSoftwareCategory = "all";
 
@@ -3006,6 +3053,10 @@ function logout() {
        ========================= */
 
     function openSection(section) {
+
+      if (restrictedAccessMode && section !== "people") {
+        return;
+      }
 
       if (newJourneyPending) {
         const identifier = session.identifier;
@@ -5396,6 +5447,10 @@ function logout() {
 
     function showMetrics() {
 
+      if (restrictedAccessMode) {
+        return;
+      }
+
       document.getElementById("loginScreen")
         .classList.add("hidden");
       document.getElementById("portalScreen")
@@ -5882,6 +5937,14 @@ function resolved(ok) {
 }
     
     function showOnboardingForm(type) {
+
+    if (
+      restrictedAccessMode &&
+      type !== "onboarding" &&
+      type !== "offboarding"
+    ) {
+      return;
+    }
 
     const titulo =
         type === "onboarding"
