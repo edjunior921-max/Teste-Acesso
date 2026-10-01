@@ -252,6 +252,23 @@ box-shadow:
       color: var(--navy);
     }
 
+    .no-access-link {
+      display: block;
+      width: max-content;
+      margin: 8px auto 0;
+      padding: 5px 8px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .no-access-link:hover {
+      background: transparent;
+      text-decoration: underline;
+      transform: none;
+    }
+
     .btn-success {
       background: var(--green);
       color: white;
@@ -357,6 +374,38 @@ box-shadow:
   transform: translateY(-3px);
   border-color: #b8d6ea;
 }
+
+    #portalScreen .no-access-only-card {
+      display: none;
+    }
+
+    #portalScreen.no-access-mode .authenticated-only-card {
+      display: none;
+    }
+
+    #portalScreen.no-access-mode .no-access-only-card {
+      display: block;
+    }
+
+    #portalScreen.no-access-mode .user-badge,
+    #portalScreen.no-access-mode #welcome {
+      visibility: hidden;
+    }
+
+    #portalScreen .no-access-brand {
+      display: none;
+    }
+
+    #portalScreen.no-access-mode .brand {
+      margin: 0;
+      font-size: 18px;
+      text-align: left;
+      text-shadow: none;
+    }
+
+    #portalScreen.no-access-mode .no-access-brand {
+      display: block;
+    }
 
 .software-intro {
   margin-bottom: 22px;
@@ -2067,7 +2116,7 @@ box-shadow:
 
         <button
           id="noUserButton"
-          class="btn btn-secondary hidden"
+          class="btn no-access-link hidden"
           type="button"
           onclick="enterRestrictedAccess()"
         >
@@ -2095,9 +2144,7 @@ box-shadow:
       <div class="header-inner">
 
        <div class="brand">
-
-  
-      
+         <span class="no-access-brand">Portal de Autoatendimento</span>
 </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
@@ -2162,7 +2209,7 @@ box-shadow:
 
     
         <div
-    class="card"
+          class="card authenticated-only-card"
     onclick="openSection('credentials')"
 >
 
@@ -2178,7 +2225,7 @@ box-shadow:
 
 
         <div
-    class="card"
+      class="card authenticated-only-card"
     onclick="openSection('catalog')"
 >
 
@@ -2196,7 +2243,7 @@ box-shadow:
 
 
         <div
-    class="card"
+      class="card authenticated-only-card"
     onclick="openSection('problems')"
 >
 
@@ -2212,7 +2259,7 @@ box-shadow:
 </div>
 
     <div
-  class="card"
+      class="card authenticated-only-card"
   onclick="openSoftwareSection()"
 >
 
@@ -2224,6 +2271,18 @@ box-shadow:
     Encontre o software que deseja instalar e acesse o Company Portal para realizar a instalação.
   </p>
 
+</div>
+
+<div
+  class="card no-access-only-card"
+  onclick="openServiceDeskWithoutAccess()"
+>
+  <h3 class="card-title">
+    🎧 Falar com o Service Desk
+  </h3>
+  <p>
+    Precisa de ajuda? Entre em contato com o Service Desk.
+  </p>
 </div>
     
 
@@ -2262,17 +2321,6 @@ box-shadow:
           <strong id="contentUser"></strong>
         </div>
 
-        <div id="restrictedModeNotice" class="hidden">
-          <strong>Fluxo de acesso sem cadastro</strong>
-          <button
-            class="btn btn-secondary"
-            type="button"
-            onclick="returnToIdentification()"
-          >
-            Voltar à identificação
-          </button>
-        </div>
-
       </div>
 
     </header>
@@ -2305,7 +2353,7 @@ box-shadow:
     let usersDatabaseLoaded = false;
     let usersDatabaseLoadPromise = null;
     let invalidLoginAttempts = 0;
-    let restrictedAccessMode = false;
+    let noAccessMode = false;
 
     async function loadUsersDatabase() {
 
@@ -2792,8 +2840,9 @@ if (!normalizedValue) {
 
     function goHome() {
 
-      if (restrictedAccessMode) {
-        openSection("people");
+      if (noAccessMode) {
+        document.getElementById("contentScreen").classList.add("hidden");
+        document.getElementById("portalScreen").classList.remove("hidden");
         return;
       }
 
@@ -2829,23 +2878,30 @@ function goBackFromContent() {
 }
 
   function enterRestrictedAccess() {
-    restrictedAccessMode = true;
+    noAccessMode = true;
     document.getElementById("loginScreen").classList.add("hidden");
-    openSection("people");
+    document.getElementById("portalScreen").classList.add("no-access-mode");
+    document.getElementById("portalScreen").classList.remove("hidden");
+    document.getElementById("userName").textContent = "";
+    document.getElementById("welcome").textContent = "";
   }
 
-  function returnToIdentification() {
-    restrictedAccessMode = false;
+  function exitNoAccessMode() {
+    noAccessMode = false;
     document.getElementById("contentScreen").classList.add("hidden");
     document.getElementById("portalScreen").classList.add("hidden");
+    document.getElementById("portalScreen").classList.remove("no-access-mode");
     document.getElementById("loginScreen").classList.remove("hidden");
-    document.getElementById("restrictedModeNotice").classList.add("hidden");
-    document.getElementById("contentUser").parentElement.classList.remove("hidden");
     document.getElementById("loginError").textContent = "";
     document.getElementById("identifier").focus();
   }
 
 function logout() {
+
+    if (noAccessMode) {
+        exitNoAccessMode();
+        return;
+    }
 
     session = createSession();
     administrativeSession = false;
@@ -2911,16 +2967,12 @@ function logout() {
           "contentUser"
         )
         .textContent =
-        restrictedAccessMode ? "" : session.name;
-
-      document
-        .getElementById("restrictedModeNotice")
-        .classList.toggle("hidden", !restrictedAccessMode);
+        noAccessMode ? "" : session.name;
 
       document
         .getElementById("contentUser")
         .parentElement
-        .classList.toggle("hidden", restrictedAccessMode);
+        .classList.toggle("hidden", noAccessMode);
 
     }
 
@@ -2928,7 +2980,7 @@ function logout() {
 
     function openSoftwareSection() {
 
-      if (restrictedAccessMode) {
+      if (noAccessMode) {
         return;
       }
 
@@ -3054,7 +3106,7 @@ function logout() {
 
     function openSection(section) {
 
-      if (restrictedAccessMode && section !== "people") {
+      if (noAccessMode && section !== "people") {
         return;
       }
 
@@ -5447,7 +5499,7 @@ function logout() {
 
     function showMetrics() {
 
-      if (restrictedAccessMode) {
+      if (noAccessMode) {
         return;
       }
 
@@ -5939,7 +5991,7 @@ function resolved(ok) {
     function showOnboardingForm(type) {
 
     if (
-      restrictedAccessMode &&
+      noAccessMode &&
       type !== "onboarding" &&
       type !== "offboarding"
     ) {
@@ -6373,25 +6425,54 @@ Favor verificar e dar continuidade ao atendimento.`;
 
     }
 
+    function openServiceDeskWithoutAccess() {
+
+      if (!noAccessMode) {
+        return;
+      }
+
+      const message =
+        "Olá, Service Desk. Preciso de ajuda para solicitar acesso ao Portal de Autoatendimento.";
+      const url =
+        "https://wa.me/553130788130?text=" +
+        encodeURIComponent(message);
+
+      showContent(`
+        <div class="content-card">
+          <h2>🎧 Falar com o Service Desk</h2>
+          <p>Precisa de ajuda? Entre em contato com o Service Desk.</p>
+          <button
+            class="btn btn-success"
+            onclick="openWhatsApp('${url}', false)"
+          >
+            ABRIR WHATSAPP DO SERVICE DESK ↗️
+          </button>
+        </div>
+      `);
+
+    }
+
 
     /* =========================
        ABRIR WHATSAPP
        ========================= */
 
-    function openWhatsApp(url) {
+    function openWhatsApp(url, logProblemTelemetry = true) {
 
-      logEvent(
-        "whatsapp_aberto",
-        {
-          section: "problems",
-          problem:
-            session.problem,
+      if (logProblemTelemetry) {
+        logEvent(
+          "whatsapp_aberto",
+          {
+            section: "problems",
+            problem:
+              session.problem,
 
-          loc: session.loc || null,
-          escalation_reason:
-            session.escalation_reason || null
-        }
-      );
+            loc: session.loc || null,
+            escalation_reason:
+              session.escalation_reason || null
+          }
+        );
+      }
 
 
       window.open(
