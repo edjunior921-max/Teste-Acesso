@@ -1161,6 +1161,82 @@ box-shadow:
       border-bottom: 0;
     }
 
+    .dashboard-software-search {
+      max-width: 520px;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-software-search input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      background: var(--white);
+      color: var(--text);
+    }
+
+    .dashboard-software-search input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(8, 119, 201, .12);
+    }
+
+    .dashboard-software-table-wrap {
+      overflow-x: auto;
+    }
+
+    .dashboard-software-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    .dashboard-software-table th,
+    .dashboard-software-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #edf1f4;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .dashboard-software-table th {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .dashboard-software-table th:first-child,
+    .dashboard-software-table td:first-child {
+      width: 76px;
+    }
+
+    .dashboard-software-table th:last-child,
+    .dashboard-software-table td:last-child {
+      width: 140px;
+    }
+
+    .dashboard-software-table td:last-child {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dashboard-software-logo {
+      display: block;
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .dashboard-software-name {
+      overflow-wrap: anywhere;
+    }
+
+    .dashboard-software-empty {
+      margin-top: 16px;
+    }
+
     .dashboard-loc-result {
       color: var(--blue);
       font-weight: 700;
@@ -1835,6 +1911,30 @@ box-shadow:
         grid-template-columns: 1fr;
       }
 
+      .dashboard-software-table th,
+      .dashboard-software-table td {
+        padding: 10px 8px;
+      }
+
+      .dashboard-software-table th:first-child,
+      .dashboard-software-table td:first-child {
+        width: 60px;
+      }
+
+      .dashboard-software-table th:last-child,
+      .dashboard-software-table td:last-child {
+        width: 112px;
+      }
+
+      .dashboard-software-table td:last-child {
+        font-size: 12px;
+      }
+
+      .dashboard-software-logo {
+        width: 40px;
+        height: 40px;
+      }
+
       .dashboard-search .btn {
         width: 100%;
         margin-top: 0;
@@ -1957,10 +2057,21 @@ box-shadow:
         ></div>
 
         <button
+          id="continueButton"
           class="btn btn-primary"
+          disabled
           onclick="identifyUser()"
         >
           CONTINUAR →
+        </button>
+
+        <button
+          id="noUserButton"
+          class="btn btn-secondary hidden"
+          type="button"
+          onclick="openCredential('first')"
+        >
+          Não possuo usuário
         </button>
 
       </div>
@@ -2179,28 +2290,65 @@ box-shadow:
 
   <script>
 
-    /* =========================
-       BASE FICTÍCIA
-       ========================= */
+    let usersDatabase = [];
+    let usersDatabaseLoaded = false;
+    let usersDatabaseLoadPromise = null;
+    let invalidLoginAttempts = 0;
 
-    const employees = {
+    async function loadUsersDatabase() {
 
-      "BSI92423": "João Silva",
+      if (usersDatabaseLoaded) {
+        return true;
+      }
 
-      "BSI12345": "Maria Souza",
+      if (usersDatabaseLoadPromise) {
+        return usersDatabaseLoadPromise;
+      }
 
-      "BBS54321": "Ana Costa",
+      usersDatabaseLoadPromise = (async () => {
 
-      "joao.silva@bs2.com.br":
-        "João Silva",
+        try {
+          const response = await fetch("./usuarios.json", { cache: "no-store" });
 
-      "maria.souza@bs2.com.br":
-        "Maria Souza",
+          if (!response.ok) {
+            throw new Error("Falha ao carregar usuarios.json");
+          }
 
-      "ana.costa@bs2.com.br":
-        "Ana Costa"
+          const records = await response.json();
 
-    };
+          if (!Array.isArray(records)) {
+            throw new Error("Formato inválido em usuarios.json");
+          }
+
+          usersDatabase = records;
+          usersDatabaseLoaded = true;
+          return true;
+        } catch (error) {
+          usersDatabase = [];
+          usersDatabaseLoaded = false;
+          return false;
+        } finally {
+          usersDatabaseLoadPromise = null;
+        }
+
+      })();
+
+      return usersDatabaseLoadPromise;
+
+    }
+
+    async function initializeUserAuthentication() {
+      const loaded = await loadUsersDatabase();
+
+      if (!loaded) {
+        document.getElementById("loginError").textContent =
+          "Não foi possível carregar a base de usuários.";
+      }
+
+      document.getElementById("continueButton").disabled = false;
+    }
+
+    initializeUserAuthentication();
 
     const softwareCatalog = [
       {
@@ -2477,7 +2625,7 @@ box-shadow:
        IDENTIFICAÇÃO
        ========================= */
 
-    function identifyUser() {
+    async function identifyUser() {
 
       const input =
         document.getElementById(
@@ -2485,11 +2633,13 @@ box-shadow:
         );
 
 
-      const value =
-        input.value.trim();
+      const value = input.value;
+      const normalizedValue = value.trim().toLocaleLowerCase("pt-BR");
+      const loginError = document.getElementById("loginError");
+      loginError.textContent = "";
 
 if (
-    value.toUpperCase() ===
+    value.trim().toUpperCase() ===
     "BS2METRICAS"
 ) {
 
@@ -2510,11 +2660,9 @@ if (
 
 }
 
-if (!value) {
+if (!normalizedValue) {
 
-    document.getElementById(
-        "loginError"
-    ).textContent =
+  loginError.textContent =
         "Informe seu BSI, BBS ou e-mail corporativo.";
 
     input.focus();
@@ -2523,23 +2671,54 @@ if (!value) {
 
 }
 
+      if (!usersDatabaseLoaded && !(await loadUsersDatabase())) {
+        loginError.textContent =
+          "Não foi possível carregar a base de usuários.";
+        return;
+      }
+
+      const user = usersDatabase.find(record => {
+        const account = String(record.usuario || "")
+          .trim()
+          .toLocaleLowerCase("pt-BR");
+        const accountName = account.split("\\").pop();
+        const email = String(record.email || "")
+          .trim()
+          .toLocaleLowerCase("pt-BR");
+
+        return account === normalizedValue ||
+          accountName === normalizedValue ||
+          email === normalizedValue;
+      });
+
+      if (!user) {
+        invalidLoginAttempts++;
+        loginError.textContent =
+          "Usuário ou e-mail não localizado. Verifique os dados informados.";
+        document.getElementById("noUserButton")
+          .classList.toggle("hidden", invalidLoginAttempts < 3);
+        input.focus();
+        return;
+      }
+
+      if (user.habilitado !== true) {
+        loginError.textContent =
+          "Seu usuário está desabilitado. Procure o Service Desk.";
+        input.focus();
+        return;
+      }
+
       session = createSession();
       administrativeSession = false;
       newJourneyPending = false;
+      invalidLoginAttempts = 0;
 
 
       session.identifier =
         value;
 
-
-      const normalized =
-        value.toLowerCase();
-
-
       session.name =
-        employees[normalized] ||
-        employees[value.toUpperCase()] ||
-        "Colaborador";
+        user.displayName;
 
 
       logEvent(
@@ -2550,7 +2729,7 @@ if (!value) {
       document.getElementById(
         "userName"
       ).textContent =
-        session.name;
+        session.identifier;
 
 
       document.getElementById(
@@ -2637,6 +2816,7 @@ function logout() {
     session = createSession();
     administrativeSession = false;
   newJourneyPending = false;
+  invalidLoginAttempts = 0;
 
     document
         .getElementById("portalScreen")
@@ -2656,6 +2836,8 @@ function logout() {
     document.getElementById(
         "identifier"
     ).value = "";
+    document.getElementById("loginError").textContent = "";
+    document.getElementById("noUserButton").classList.add("hidden");
 
 }
 
@@ -2750,7 +2932,6 @@ function logout() {
             `).join("")}
           </div>
           <p id="softwareEmpty" class="software-empty hidden" role="status">Nenhum software encontrado.</p>
-          <button class="btn btn-secondary software-home" type="button" onclick="goHome()">← Voltar à Home</button>
         </section>
       `);
 
@@ -3577,6 +3758,7 @@ function logout() {
     let dashboardActiveTab = "overview";
     let dashboardSelectedLoc = "";
     let dashboardLocSearch = "";
+    let dashboardSoftwareSearch = "";
 
     function setDashboardTab(tab) {
 
@@ -3681,10 +3863,28 @@ function logout() {
                 ? "Encaminhado ao Service Desk"
                 : ""
             : "";
+          const equipmentEvent = occurrence.event.session_id
+            ? events.find(event => {
+              const eventTime = new Date(event.timestamp).getTime();
+              const resultTime = resultEvent
+                ? new Date(resultEvent.timestamp).getTime()
+                : NaN;
+
+              return event.type === "loc_informado" &&
+                event.section === "problems" &&
+                event.session_id === occurrence.event.session_id &&
+                String(event.problem || "").trim() === occurrence.problem &&
+                String(event.loc || "").trim() === occurrence.loc &&
+                !Number.isNaN(eventTime) &&
+                eventTime >= occurrenceTime &&
+                (Number.isNaN(resultTime) || eventTime <= resultTime);
+            })
+            : null;
 
           return {
             timestamp: occurrence.event.timestamp,
             problem: occurrence.problem,
+            equipmentDetail: String(equipmentEvent?.loc || "").trim(),
             user: String(
               occurrence.event.name ||
               occurrence.event.identifier ||
@@ -4104,6 +4304,29 @@ function logout() {
         dateStyle: "short",
         timeStyle: "short"
       });
+
+    }
+
+    function filterDashboardSoftware() {
+
+      const query = document.getElementById("dashboardSoftwareSearch")
+        ?.value.trim().toLocaleLowerCase("pt-BR") || "";
+      dashboardSoftwareSearch = query;
+      const rows = document.querySelectorAll(".dashboard-software-row");
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const isVisible = row.dataset.softwareName.includes(query);
+
+        row.classList.toggle("hidden", !isVisible);
+
+        if (isVisible) {
+          visibleCount++;
+        }
+      });
+
+      document.getElementById("dashboardSoftwareEmpty")
+        ?.classList.toggle("hidden", visibleCount > 0);
 
     }
 
@@ -4748,6 +4971,34 @@ function logout() {
         0,
         ...problemRows.map(row => row.selected)
       );
+      const softwareDownloadCounts = new Map();
+
+      events.forEach(event => {
+
+        if (event.type !== "software_selecionado") {
+          return;
+        }
+
+        const software = String(event.software || "").trim();
+
+        if (software) {
+          softwareDownloadCounts.set(
+            software,
+            (softwareDownloadCounts.get(software) || 0) + 1
+          );
+        }
+
+      });
+
+      const softwareSearchQuery = dashboardSoftwareSearch
+        .trim()
+        .toLocaleLowerCase("pt-BR");
+      const softwareRows = softwareCatalog
+        .map(software => ({
+          ...software,
+          downloads: softwareDownloadCounts.get(software.name) || 0
+        }))
+        .sort((a, b) => b.downloads - a.downloads);
 
       document.getElementById("content").innerHTML = `
         <div class="content-card dashboard-shell">
@@ -4793,6 +5044,7 @@ function logout() {
             <button class="dashboard-tab ${dashboardActiveTab === "users" ? "dashboard-tab--active" : ""}" data-tab="users" onclick="setDashboardTab('users')">Usuários</button>
             <button class="dashboard-tab ${dashboardActiveTab === "problems" ? "dashboard-tab--active" : ""}" data-tab="problems" onclick="setDashboardTab('problems')">Problemas &amp; LOC</button>
             <button class="dashboard-tab ${dashboardActiveTab === "selfservice" ? "dashboard-tab--active" : ""}" data-tab="selfservice" onclick="setDashboardTab('selfservice')">Autoatendimento</button>
+            <button class="dashboard-tab ${dashboardActiveTab === "software" ? "dashboard-tab--active" : ""}" data-tab="software" onclick="setDashboardTab('software')">Softwares</button>
           </div>
 
           <div class="dashboard-tab-panel ${dashboardActiveTab === "overview" ? "dashboard-tab-panel--active" : ""}" data-panel="overview">
@@ -4938,6 +5190,48 @@ function logout() {
           </section>
           </div>
 
+          <div class="dashboard-tab-panel ${dashboardActiveTab === "software" ? "dashboard-tab-panel--active" : ""}" data-panel="software">
+          <section class="dashboard-section">
+            <h3 class="dashboard-section-title">Indicadores de software</h3>
+            <div class="dashboard-software-search">
+              <input
+                id="dashboardSoftwareSearch"
+                type="search"
+                placeholder="Pesquisar software..."
+                value="${escapeHtml(dashboardSoftwareSearch)}"
+                autocomplete="off"
+                oninput="filterDashboardSoftware()"
+              >
+            </div>
+            <div class="dashboard-software-table-wrap">
+              <table class="dashboard-software-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Logo</th>
+                    <th scope="col">Software</th>
+                    <th scope="col">Downloads</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${softwareRows.map(software => {
+                    const normalizedName = software.name.toLocaleLowerCase("pt-BR");
+                    const matchesSearch = normalizedName.includes(softwareSearchQuery);
+
+                    return `
+                      <tr class="dashboard-software-row ${matchesSearch ? "" : "hidden"}" data-software-name="${escapeHtml(normalizedName)}">
+                        <td><img class="dashboard-software-logo" src="${escapeHtml(software.icone)}" alt=""></td>
+                        <td class="dashboard-software-name">${escapeHtml(software.name)}</td>
+                        <td>${formatNumber(software.downloads)} downloads</td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+              </table>
+            </div>
+            <p id="dashboardSoftwareEmpty" class="dashboard-empty dashboard-software-empty ${softwareRows.some(software => software.name.toLocaleLowerCase("pt-BR").includes(softwareSearchQuery)) ? "hidden" : ""}">Nenhum software encontrado.</p>
+          </section>
+          </div>
+
           <div class="dashboard-tab-panel ${dashboardActiveTab === "problems" ? "dashboard-tab-panel--active" : ""}" data-panel="problems">
           <section class="dashboard-section">
             <h3 class="dashboard-section-title">Problemas mais frequentes</h3>
@@ -5011,6 +5305,7 @@ function logout() {
                         <tr>
                           <th>Data/Hora</th>
                           <th>Problema</th>
+                          <th>Detalhamento do equipamento</th>
                           <th>Usuário</th>
                           <th>Resultado</th>
                         </tr>
@@ -5020,6 +5315,7 @@ function logout() {
                           <tr>
                             <td>${escapeHtml(formatUserActivityTimestamp(row.timestamp))}</td>
                             <td>${escapeHtml(row.problem)}</td>
+                            <td>${escapeHtml(row.equipmentDetail)}</td>
                             <td>${escapeHtml(row.user)}</td>
                             <td class="dashboard-loc-result">${escapeHtml(row.result)}</td>
                           </tr>
