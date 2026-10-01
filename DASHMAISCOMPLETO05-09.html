@@ -2057,7 +2057,9 @@ box-shadow:
         ></div>
 
         <button
+          id="continueButton"
           class="btn btn-primary"
+          disabled
           onclick="identifyUser()"
         >
           CONTINUAR →
@@ -2306,7 +2308,7 @@ box-shadow:
       usersDatabaseLoadPromise = (async () => {
 
         try {
-          const response = await fetch("./usuarios.json");
+          const response = await fetch("./usuarios.json", { cache: "no-store" });
 
           if (!response.ok) {
             throw new Error("Falha ao carregar usuarios.json");
@@ -2335,7 +2337,18 @@ box-shadow:
 
     }
 
-    loadUsersDatabase();
+    async function initializeUserAuthentication() {
+      const loaded = await loadUsersDatabase();
+
+      if (!loaded) {
+        document.getElementById("loginError").textContent =
+          "Não foi possível carregar a base de usuários.";
+      }
+
+      document.getElementById("continueButton").disabled = false;
+    }
+
+    initializeUserAuthentication();
 
     const softwareCatalog = [
       {
@@ -2660,14 +2673,23 @@ if (!normalizedValue) {
 
       if (!usersDatabaseLoaded && !(await loadUsersDatabase())) {
         loginError.textContent =
-          "Não foi possível validar o usuário. Tente novamente ou procure o Service Desk.";
+          "Não foi possível carregar a base de usuários.";
         return;
       }
 
-      const user = usersDatabase.find(record =>
-        String(record.usuario || "").trim().toLocaleLowerCase("pt-BR") === normalizedValue ||
-        String(record.email || "").trim().toLocaleLowerCase("pt-BR") === normalizedValue
-      );
+      const user = usersDatabase.find(record => {
+        const account = String(record.usuario || "")
+          .trim()
+          .toLocaleLowerCase("pt-BR");
+        const accountName = account.split("\\").pop();
+        const email = String(record.email || "")
+          .trim()
+          .toLocaleLowerCase("pt-BR");
+
+        return account === normalizedValue ||
+          accountName === normalizedValue ||
+          email === normalizedValue;
+      });
 
       if (!user) {
         invalidLoginAttempts++;
