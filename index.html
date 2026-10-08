@@ -5592,7 +5592,7 @@ function logout() {
                   <button
                     class="dashboard-loc-item dashboard-loc-item--button ${index === 0 ? "dashboard-loc-item--top" : ""} ${dashboardSelectedLoc === row.loc ? "dashboard-loc-item--selected" : ""}"
                     type="button"
-                    onclick="selectDashboardLoc('${encodeURIComponent(row.loc)}')"
+                    onclick="selectDashboardLoc('${encodeURIComponent(row.loc).replace(/'/g, "%27")}')"
                     aria-pressed="${dashboardSelectedLoc === row.loc}"
                   >
                     <div class="dashboard-loc-ranking-main">
@@ -6635,14 +6635,14 @@ Favor verificar e dar continuidade ao atendimento.`;
             <br>
 
             LOC:
-            ${session.loc}
+            ${escapeHtml(session.loc)}
 
           </div>
 
 
           <button
             class="btn btn-success"
-            onclick="openWhatsApp('${url}')"
+            onclick="openWhatsApp('${url.replace(/'/g, "\\'")}')"
           >
             ABRIR WHATSAPP DO SERVICE DESK ↗️
           </button>
