@@ -2060,6 +2060,232 @@ box-shadow:
     text-align:center;
 }
     }
+
+    /* Estilos do modelo visual, limitados à tela de autenticação */
+    #loginScreen,
+    #loginScreen * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    #loginScreen {
+      position: relative;
+      isolation: isolate;
+      height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #162164;
+      color: white;
+    }
+
+    #loginScreen.tela {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1;
+    }
+
+    #loginScreen.tela.ativa {
+      display: flex;
+    }
+
+    #loginScreen .bolhas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #loginScreen .bolhas span {
+      position: absolute;
+      bottom: -150px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: login-subir linear infinite;
+    }
+
+    #loginScreen .bolhas span:nth-child(1) { left: 10%; animation-duration: 12s; }
+    #loginScreen .bolhas span:nth-child(2) { left: 20%; animation-duration: 18s; }
+    #loginScreen .bolhas span:nth-child(3) { left: 40%; animation-duration: 10s; }
+    #loginScreen .bolhas span:nth-child(4) { left: 60%; animation-duration: 15s; }
+    #loginScreen .bolhas span:nth-child(5) { left: 80%; animation-duration: 20s; }
+    #loginScreen .bolhas span:nth-child(6) { left: 90%; animation-duration: 14s; }
+
+    #loginScreen .login-wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    #loginScreen .login-card {
+      width: min(100%, 520px);
+      padding: 20px;
+      background: transparent;
+      box-shadow: none;
+      text-align: center;
+    }
+
+    #loginScreen .brand {
+      margin-bottom: 2px;
+    }
+
+    #loginScreen .logo {
+      display: block;
+      width: min(220px, 72vw);
+      height: auto;
+      margin: 0 auto 2px;
+    }
+
+    #loginScreen h1 {
+      margin-bottom: 20px;
+      color: white;
+      font-size: 42px;
+      line-height: 1.2;
+    }
+
+    #loginScreen .descricao {
+      margin-bottom: 32px;
+      color: white;
+      font-size: 20px;
+      line-height: 1.4;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    #loginScreen #identifier {
+      width: 100%;
+      min-height: 56px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 12px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.96);
+      color: #162164;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    #loginScreen #identifier:focus {
+      border-color: #fff;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+
+    #loginScreen .error {
+      min-height: 18px;
+      margin-top: 8px;
+      color: #ffd0d0;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    #loginScreen .btn-primary {
+      width: 100%;
+      min-height: 56px;
+      margin-top: 12px;
+      padding: 16px 24px;
+      border: 0;
+      border-radius: 12px;
+      background: white;
+      color: #162164;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #loginScreen .btn-primary:not(:disabled):hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    #loginScreen .btn-primary:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    #loginScreen .no-access-link {
+      display: block;
+      width: max-content;
+      margin: 12px auto 0;
+      padding: 6px 8px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    #loginScreen .no-access-link:hover {
+      background: transparent;
+      text-decoration: underline;
+      transform: none;
+    }
+
+    @keyframes login-subir {
+      0% { transform: translateY(0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    @media (max-width: 520px) {
+      #loginScreen .login-wrap {
+        padding: 16px;
+      }
+
+      #loginScreen .login-card {
+        padding: 16px;
+      }
+
+      #loginScreen h1 {
+        font-size: clamp(30px, 9vw, 42px);
+      }
+
+      #loginScreen .descricao {
+        margin-bottom: 26px;
+        font-size: 18px;
+      }
+    }
+
+    @media (max-height: 620px) {
+      #loginScreen {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+
+      #loginScreen .login-wrap {
+        min-height: 100vh;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      #loginScreen .logo {
+        width: min(170px, 55vw);
+      }
+
+      #loginScreen .descricao {
+        margin-bottom: 20px;
+        font-size: 17px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #loginScreen .bolhas span {
+        animation: none;
+      }
+    }
   </style>
 </head>
 
@@ -2069,7 +2295,16 @@ box-shadow:
        TELA DE IDENTIFICAÇÃO
        ========================= -->
 
-  <div id="loginScreen" class="screen">
+  <div id="loginScreen" class="screen tela ativa">
+    <div class="bolhas" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <div class="login-wrap">
 
       <div class="login-card">
@@ -2078,18 +2313,11 @@ box-shadow:
     <img src="logo-bs2.png" alt="BS2" class="logo">
 </div>
 
-        <h1>
-  Portal de Autoatendimento
-</h1>
+        <h1>Bem-vindo!</h1>
 
-<p class="welcome-text">
-  Bem-vindo!
-</p>
-
-<p>
-  Informe seu BSI, BBS ou e-mail corporativo
-  para acessar os serviços disponíveis.
-</p>
+        <p class="descricao">
+          Informe seu BSI, BBS ou e-mail corporativo para acessar os serviços disponíveis.
+        </p>
 
       
 
